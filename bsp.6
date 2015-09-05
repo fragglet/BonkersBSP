@@ -1,0 +1,130 @@
+.TH bsp 6 "2002-04-06" "BSP 5.1"
+.SH NAME
+bsp \- node builder for WAD files
+.SH SYNOPSIS
+.B bsp
+[
+.B \-blockmap
+.RB { old | comp }
+]
+[
+.B \-factor
+.I n
+]
+[
+.B \-noreject
+]
+[
+.B \-o
+.I file
+]
+[
+.B \-picknode
+.RB { traditional | visplane }
+]
+[
+.B \-q
+]
+.I file
+.SH DESCRIPTION
+BSP builds the nodes and blockmap resources for all the levels in a WAD file.
+Levels created with level editors won't run without these resources.
+.SH OPTIONS
+.TP
+\fB\-blockmap\fP {\fBold\fP|\fBcomp\fP}
+This selects the algorithm used for generating the blockmap resource.
+The
+.B old
+algorithm (currently the default, but this might change in future) produces 
+a complete blockmap which contains some redundancy.
+The
+.B comp
+algorithm generates an equivalent blockmap, but which eliminates this
+redundancy, making a smaller resulting WAD file.
+.TP
+\fB\-factor\fR \fIn\fR
+Changes the cost assigned to seg splits.
+Factor \fIn\fR can be any positive integer, and the larger the factor, the more
+costly seg splits are.
+A factor of 17 is the default and behaves just like earlier versions of BSP.
+Most people do not need or want to change the default.
+Changing the factor can sometimes prevent visplane overflows in WAD's; but then
+again, some WAD's have just too many visplane overflows, experiment with the
+\fB\-factor\fP option before giving up.
+.TP
+.B \-noreject
+Normally, BSP creates a zero-ed reject map, which is sub-optimal but sufficient
+for Doom to play the level.
+Other tools are available to build an optimal reject map.
+If a level already has an optimised reject map, this option should be used to
+stop BSP replacing it.
+.TP
+\fB\-picknode\fP {\fBtraditional\fP|\fBvisplane\fP}
+In 
+.B traditional
+mode (the default), BSP aims to produce a balanced node tree that minimises the
+number of lines that must be split in this process.
+.B visplane
+mode causes the node line picker to choose node lines in a way that is
+empirically known to reduce or eliminate visplane overflows.
+This is an old bug that affected the original Doom engine but does not affect
+newer engines - if you don't know what this option is and have no problems
+without it, you do not need it.
+.TP
+\fB\-o\fR \fIfile\fR
+Sets the name of the WAD file for output.
+Should not be the same as the input!
+As with the input filename, it can be a \fB\-\fP to indicate that standard
+input/output should be used.
+Without this option, output is written to \fBtmp.wad\fP.
+.TP
+.B \-q
+Does not show program banners or progress, for usage from other programs.
+.SH SPECIAL EFFECTS
+BSP has some special effect features:
+.LP
+If a linedef has a sector tag \(>= 900, then it is treated as "precious" and
+will not be split unless absolutely necessary.
+This is good to use around borders of deep water, invisible stairs, etc.
+.LP
+Furthermore, just for a grin, if the lindef's tag is 999, then the sidedef's
+x-offset sets an angle adjustment in degrees to be applied \(em you can look
+straight at a wall, but it might come right at you on both sides and "stretch".
+.LP
+BSP supports HOM-free transparent doors.
+Simply make the sector referenced by the doortracks have a sector tag of \(>=
+900.
+The doortracks must the lowest numbered of all the linedefs that form the door.
+No need to remember sector numbers and type them in on a command line \(em just
+use any sector tag \(>= 900 to permanently mark the sector special.
+The special tag is not strictly necessary; it just prevents a flash of HOM at
+the top of the door when it opens or closes.
+See \fBtest-wads/transdor.wad\fP for an example.
+.SH SUPPORTED GAMES
+Doom, Ultimate Doom, Doom ][, Final Doom, Heretic and Strife.
+.SH EXIT STATUS
+\fB0\fP	OK
+.br
+\fB>0\fP	Errors occurred
+.SH BUGS/LIMITATIONS
+This program will \fInot\fP build a good reject map, it will (unless
+\fB\-noreject\fP is used) build a zero-ed one, where every sector is visible
+from any other sector.
+For the final release of a level, a reject map should be built using a suitable
+tool, such as RMB.
+
+The Hexen level format is not supported.
+.SH AUTHORS
+BSP was written by Colin Reed and Lee Killough (killough@rsn.hp.com), based on
+an algorithm by Raphaël Quinet.
+
+Contributors include Simon "fraggle" Howard (compressed blockmap code), Oliver
+Kraus (endianness fixes), André Majorel (Unix port, man page) and Udo Munk
+(Unix port, man page, assorted hacks).
+
+BSP is currently maintained by Colin Phipps <cph@moria.org.uk>.
+.SH SEE ALSO
+.BR idbsp (6),
+.BR warm (6),
+.BR wreject (6),
+.BR zennode (6).
