@@ -53,6 +53,11 @@ struct lumplist *FindDir(const char *);
 void* ReadLump(struct lumplist *l);
 void add_lump(const char *name, void *data, size_t length);
 
+/* domain.c */
+
+void AnnotateNodeTree(struct Node *node);
+void GenerateDomains(void);
+
 /* endian.c */
 
 void ConvertAll(void);

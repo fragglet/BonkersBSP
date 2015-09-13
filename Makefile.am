@@ -11,9 +11,9 @@ doc_DATA = $(DOCS)
 
 bin_PROGRAMS=bsp
 
-bsp_SOURCES=blockmap.c bsp.c endian.c funcs.c level.c makenode.c picknode.c bsp.h structs.h
+bsp_SOURCES=blockmap.c bsp.c endian.c funcs.c level.c makenode.c picknode.c bsp.h structs.h domain.c
 
-blockmap.c bsp.c funcs.c endian.c level.c makenode.c picknode.c : bsp.h structs.h config.h
+blockmap.c bsp.c domain.c funcs.c endian.c level.c makenode.c picknode.c : bsp.h structs.h config.h
 
 dos	:	$(DOCS)
 	-mkdir dos-dist
